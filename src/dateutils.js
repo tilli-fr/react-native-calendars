@@ -80,12 +80,33 @@ function page(xd, firstDayOfWeek) {
   return before.concat(days.slice(1, days.length - 1), after);
 }
 
+function week(xd, firstDayOfWeek) {
+  const fdow = ((7 + firstDayOfWeek) % 7) || 7;
+  const ldow = (fdow + 6) % 7;
+
+  firstDayOfWeek = firstDayOfWeek || 0;
+
+  const from = xd.clone();
+  if (from.getDay() !== fdow) {
+    from.addDays(-(from.getDay() + 7 - fdow) % 7);
+  }
+
+  const to = xd.clone();
+  const day = to.getDay();
+  if (day !== ldow) {
+    to.addDays((ldow + 7 - day) % 7);
+  }
+
+  return fromTo(from, to);
+}
+
 module.exports = {
   weekDayNames,
   sameMonth,
   sameDate,
   month,
   page,
+  week,
   fromTo,
   isLTE,
   isGTE
