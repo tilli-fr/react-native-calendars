@@ -100,6 +100,7 @@ export default class AgendaView extends Component {
 
     this.state = {
       scrollY: new Animated.Value(0),
+      scrollPadY: 0,
       calendarIsReady: false,
       calendarScrollable: false,
       firstResevationLoad: false,
@@ -127,6 +128,7 @@ export default class AgendaView extends Component {
   }
 
   setScrollPadPosition(y, animated) {
+    this.setState({ scrollPadY: y });
     this.scrollPad._component.scrollTo({x: 0, y, animated});
   }
 
@@ -153,12 +155,15 @@ export default class AgendaView extends Component {
   }
 
   onTouchEnd() {
+    const currentY = this.state.scrollPadY;
     if (this.knob) {
       this.knob.setNativeProps({style: {opacity: 1}});
     }
 
     if (this.headerState === 'touched') {
-      this.setScrollPadPosition(0, true);
+      const maxY = this.initialScrollPadPosition();
+      const snapY = currentY > maxY / 2 ? 0 : maxY;
+      this.setScrollPadPosition(snapY, true);
       this.enableCalendarScrolling();
     }
 
@@ -398,7 +403,7 @@ export default class AgendaView extends Component {
       weekdaysStyle.push({height: HEADER_HEIGHT});
     }
 
-    const shouldAllowDragging = !this.props.hideKnob && !this.state.calendarScrollable;
+    const shouldAllowDragging = !this.props.hideKnob;
     const scrollPadPosition = (shouldAllowDragging ? HEADER_HEIGHT  : 0) - KNOB_HEIGHT;
 
     const scrollPadStyle = {
@@ -406,6 +411,7 @@ export default class AgendaView extends Component {
       width: this.viewWidth,
       height: KNOB_HEIGHT,
       top: scrollPadPosition,
+      transform: [{translateY: reservationsTranslate}],
       left: 0
     };
 
@@ -452,6 +458,7 @@ export default class AgendaView extends Component {
               disabledByDefault={this.props.disabledByDefault}
               displayLoadingIndicator={this.props.displayLoadingIndicator}
               showWeekNumbers={this.props.showWeekNumbers}
+              hideArrows={false}
             />
           </Animated.View>
 
