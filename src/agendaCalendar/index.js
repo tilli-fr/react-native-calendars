@@ -431,8 +431,8 @@ export default class AgendaView extends Component {
         <Animated.View style={[this.styles.reservations, { transform: [{translateY: reservationsTranslate}] }]}>
           {this.props.children || this.renderReservations()}
         </Animated.View>
-        <Animated.View style={headerStyle}>
-          <Animated.View style={contentStyle}>
+        <Animated.View style={headerStyle} pointerEvents={'box-none'}>
+          <Animated.View style={contentStyle} pointerEvents={'box-none'}>
             <CalendarList
               calendarWidth={this.viewWidth}
               horizontal={this.props.horitonzal}
