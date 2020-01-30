@@ -101,8 +101,8 @@ export default class AgendaView extends Component {
     this.state = {
       scrollY: new Animated.Value(0),
       scrollPadY: 0,
-      calendarIsReady: false,
-      calendarScrollable: false,
+      calendarIsReady: true,
+      calendarScrollable: true,
       firstResevationLoad: false,
       selectedDay: parseDate(this.props.selected) || XDate(true),
       topDay: parseDate(this.props.selected) || XDate(true),
