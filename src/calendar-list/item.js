@@ -6,7 +6,7 @@ import styleConstructor from './style';
 
 class CalendarListItem extends Component {
   static displayName = 'IGNORE';
-  
+
   static defaultProps = {
     hideArrows: true,
     hideExtraDays: true
@@ -29,7 +29,7 @@ class CalendarListItem extends Component {
     if (this.props.onPressArrowLeft) {
       this.props.onPressArrowLeft(_, monthClone);
     } else if (this.props.scrollToMonth) {
-      monthClone.addMonths(-1);
+      monthClone.addMonths(-1, true);
       this.props.scrollToMonth(monthClone);
     }
   }
@@ -40,7 +40,7 @@ class CalendarListItem extends Component {
     if (this.props.onPressArrowRight) {
       this.props.onPressArrowRight(_, monthClone);
     } else if (this.props.scrollToMonth) {
-      monthClone.addMonths(1);
+      monthClone.addMonths(1, true);
       this.props.scrollToMonth(monthClone);
     }
   }
