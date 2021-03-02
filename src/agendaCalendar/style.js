@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import * as defaultStyle from '../style';
 import platformStyles from './platform-style';
 
@@ -7,7 +7,7 @@ export const HEADER_HEIGHT = 108 + 30;
 export const KNOB_HEIGHT = 24 + 30;
 
 export default function styleConstructor(theme = {}) {
-  const appStyle = {...defaultStyle, ...theme};
+  const appStyle = { ...defaultStyle, ...theme };
   const { knob, weekdays } = platformStyles(appStyle);
   return StyleSheet.create({
     knob,
@@ -20,9 +20,9 @@ export default function styleConstructor(theme = {}) {
     header: {
       overflow: 'hidden',
       justifyContent: 'flex-end',
-      position:'absolute',
-      height:'100%',
-      width:'100%',
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
     },
     calendar: { // not in use
       flex: 1,
