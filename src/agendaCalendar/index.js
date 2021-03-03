@@ -464,6 +464,7 @@ export default class AgendaView extends Component {
               displayLoadingIndicator={this.props.displayLoadingIndicator}
               showWeekNumbers={this.props.showWeekNumbers}
               hideArrows={false}
+              renderArrow={this.props.renderArrow}
             />
           </Animated.View>
 
