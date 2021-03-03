@@ -30,7 +30,7 @@ export default class AgendaView extends Component {
     /** agenda container style */
     style: viewPropTypes.style,
     /** Display the calendar in horizontal. Default = false */
-    horitonzal: PropTypes.bool,
+    horizontal: PropTypes.bool,
     /** the list of items that have to be displayed in agenda. If you want to render item as empty date
     the value of date key has to be an empty array []. If there exists no value for date key it is
     considered that the date in question is not yet loaded */
@@ -120,7 +120,7 @@ export default class AgendaView extends Component {
   }
 
   calendarOffset() {
-    return this.props.horitonzal ? 0 : 90 - (this.viewHeight / 2);
+    return this.props.horizontal ? 0 : 90 - (this.viewHeight / 2);
   }
 
   initialScrollPadPosition() {
@@ -385,7 +385,7 @@ export default class AgendaView extends Component {
       flex: 1,
       transform: [{ translateY: contentTranslate }],
       opacity: contentOpacity,
-      maxHeight: agendaHeight / 2 + KNOB_HEIGHT,
+      maxHeight: this.viewHeight / 2 + KNOB_HEIGHT,
       position: 'absolute',
       top: 0,
     };
@@ -440,8 +440,8 @@ export default class AgendaView extends Component {
           <Animated.View style={contentStyle} pointerEvents={'box-none'}>
             <CalendarList
               calendarWidth={this.viewWidth}
-              horizontal={this.props.horitonzal}
-              pagingEnabled={this.props.horitonzal}
+              horizontal={this.props.horizontal}
+              pagingEnabled={this.props.horizontal}
               theme={this.props.theme}
               onVisibleMonthsChange={this.onVisibleMonthsChange.bind(this)}
               ref={(c) => this.calendar = c}
@@ -463,7 +463,7 @@ export default class AgendaView extends Component {
               disabledByDefault={this.props.disabledByDefault}
               displayLoadingIndicator={this.props.displayLoadingIndicator}
               showWeekNumbers={this.props.showWeekNumbers}
-              hideArrows={false}
+              hideArrows={this.props.hideArrows}
               renderArrow={this.props.renderArrow}
             />
           </Animated.View>
