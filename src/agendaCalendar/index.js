@@ -339,18 +339,19 @@ export default class AgendaView extends Component {
 
   render() {
     const agendaHeight = Math.max(0, this.viewHeight - HEADER_HEIGHT);
+    const agendaHeight2 = Math.max(0, this.viewHeight / 2 - HEADER_HEIGHT);
     const weekDaysNames = dateutils.weekDayNames(this.props.firstDay);
 
     const weekdaysStyle = [this.styles.weekdays, {
       flexDirection: 'column',
       opacity: this.state.scrollY.interpolate({
-        inputRange: [agendaHeight - HEADER_HEIGHT, agendaHeight],
+        inputRange: [0, agendaHeight - HEADER_HEIGHT],
         outputRange: [0, 1],
         extrapolate: 'clamp'
       }),
       transform: [{
         translateY: this.state.scrollY.interpolate({
-          inputRange: [Math.max(0, agendaHeight - HEADER_HEIGHT), agendaHeight],
+          inputRange: [0, agendaHeight - HEADER_HEIGHT],
           outputRange: [-HEADER_HEIGHT, 0],
           extrapolate: 'clamp'
         })
@@ -365,13 +366,13 @@ export default class AgendaView extends Component {
 
     const knobTranslate = this.state.scrollY.interpolate({
       inputRange: [0, agendaHeight],
-      outputRange: [-agendaHeight / 2, 0],
+      outputRange: [-(agendaHeight + HEADER_HEIGHT) / 2, 0],
       extrapolate: 'clamp'
     });
 
     const contentTranslate = this.state.scrollY.interpolate({
       inputRange: [0, agendaHeight],
-      outputRange: [0, agendaHeight / 2],
+      outputRange: [0, (agendaHeight - HEADER_HEIGHT) / 2],
       extrapolate: 'clamp'
     });
 
@@ -392,7 +393,7 @@ export default class AgendaView extends Component {
 
     const reservationsTranslate = this.state.scrollY.interpolate({
       inputRange: [0, agendaHeight],
-      outputRange: [agendaHeight / 2, 0],
+      outputRange: [(agendaHeight - HEADER_HEIGHT) / 2, 0],
       extrapolate: 'clamp'
     });
 
