@@ -30,12 +30,10 @@ export default function styleConstructor(theme = {}) {
       borderColor: appStyle.separatorColor
     },
     knobContainer: {
-      flex: 1,
       position: 'absolute',
       left: 0,
       right: 0,
       height: KNOB_HEIGHT,
-      bottom: 0,
       alignItems: 'center',
       backgroundColor: appStyle.calendarBackground
     },
@@ -49,9 +47,11 @@ export default function styleConstructor(theme = {}) {
     },
     reservations: {
       flex: 1,
-      marginTop: HEADER_HEIGHT,
       marginBottom: 50,
-      backgroundColor: appStyle.backgroundColor
+      backgroundColor: appStyle.backgroundColor,
+      position: 'absolute',
+      top: 0,
+      left: 0,
     },
     ...(theme[STYLESHEET_ID] || {})
   });
