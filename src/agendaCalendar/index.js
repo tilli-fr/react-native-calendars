@@ -165,6 +165,8 @@ export default class AgendaView extends Component {
       this.enableCalendarScrolling();
     }
 
+    this.calendar.scrollToDay(this.state.selectedDay, this.calendarOffset(), true);
+
     this.headerState = 'idle';
   }
 
@@ -335,6 +337,11 @@ export default class AgendaView extends Component {
     return { ...markings, [key]: { ...(markings[key] || {}), ...{ selected: true } } };
   }
 
+  onCalendarLayout(event) {
+    const {height} = event.nativeEvent.layout;
+    this.setState({ calendarHeight: height });
+  }
+
   render() {
     const agendaHeight = Math.max(0, this.viewHeight - HEADER_HEIGHT);
     const weekDaysNames = dateutils.weekDayNames(this.props.firstDay);
@@ -383,14 +390,13 @@ export default class AgendaView extends Component {
       flex: 1,
       transform: [{ translateY: contentTranslate }],
       opacity: contentOpacity,
-      maxHeight: this.viewHeight / 2 + KNOB_HEIGHT,
       position: 'absolute',
       top: 0,
     };
 
     const reservationsTranslate = this.state.scrollY.interpolate({
-      inputRange: [0, this.viewWidth],
-      outputRange: [this.viewWidth, HEADER_HEIGHT],
+      inputRange: [0, agendaHeight],
+      outputRange: [this.state.calendarHeight || 0, HEADER_HEIGHT - KNOB_HEIGHT],
       extrapolate: 'clamp'
     });
 
@@ -412,7 +418,7 @@ export default class AgendaView extends Component {
       position: 'absolute',
       width: this.viewWidth,
       height: KNOB_HEIGHT,
-      top: -KNOB_HEIGHT,
+      top: 0,
       transform: [{ translateY: reservationsTranslate }],
       left: 0,
     };
@@ -478,6 +484,7 @@ export default class AgendaView extends Component {
               showWeekNumbers={this.props.showWeekNumbers}
               hideArrows={this.props.hideArrows}
               renderArrow={this.props.renderArrow}
+              onLayout={(event) => this.onCalendarLayout(event)}
             />
           </Animated.View>
 
@@ -508,7 +515,7 @@ export default class AgendaView extends Component {
           />
         </Animated.View>
 
-        <Animated.View style={[this.styles.reservations, { height: this.viewHeight - (this.state.scrollPadY === agendaHeight ? (HEADER_HEIGHT + KNOB_HEIGHT) : this.viewWidth), width: this.viewWidth , transform: [{ translateY: reservationsTranslate }] }]}>
+        <Animated.View style={[this.styles.reservations, { height: this.viewHeight - (this.state.scrollPadY === agendaHeight ? (HEADER_HEIGHT + KNOB_HEIGHT) : (this.state.calendarHeight + KNOB_HEIGHT || 0)), width: this.viewWidth , transform: [{ translateY: reservationsTranslate }] }]}>
             <View style={[knobContainer, { position: 'absolute', top: -KNOB_HEIGHT, left: 0 }]}>
               {knob}
             </View>
