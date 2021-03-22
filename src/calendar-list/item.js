@@ -47,12 +47,12 @@ class CalendarListItem extends Component {
 
   render() {
     const row = this.props.item;
-
+    
     if (row.getTime) {
       return (
         <Calendar
           theme={this.props.theme}
-          style={[{height: this.props.calendarWidth, width: this.props.calendarWidth}, this.style.calendar, this.props.style]}
+          style={[{width: this.props.calendarWidth}, this.style.calendar, this.props.style]}
           current={row}
           hideArrows={this.props.hideArrows}
           hideExtraDays={this.props.hideExtraDays}
@@ -74,12 +74,13 @@ class CalendarListItem extends Component {
           onPressArrowLeft={this.props.horizontal ? this.onPressArrowLeft : this.props.onPressArrowLeft}
           onPressArrowRight={this.props.horizontal ? this.onPressArrowRight : this.props.onPressArrowRight}
           headerStyle={this.props.horizontal ? this.props.headerStyle : undefined}
-        />);
+        />
+      );
     } else {
       const text = row.toString();
 
       return (
-        <View style={[{height: this.props.calendarHeight, width: this.props.calendarWidth}, this.style.placeholder]}>
+        <View style={[{width: this.props.calendarWidth}, this.style.placeholder]}>
           <Text allowFontScaling={false} style={this.style.placeholderText}>{text}</Text>
         </View>
       );
@@ -88,3 +89,4 @@ class CalendarListItem extends Component {
 }
 
 export default CalendarListItem;
+

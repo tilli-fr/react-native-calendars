@@ -30,12 +30,12 @@ export default function styleConstructor(theme = {}) {
       borderColor: appStyle.separatorColor
     },
     knobContainer: {
+      flex: 1,
       position: 'absolute',
       left: 0,
       right: 0,
       height: KNOB_HEIGHT,
       alignItems: 'center',
-      backgroundColor: appStyle.calendarBackground
     },
     weekday: {
       width: 32,
@@ -50,7 +50,7 @@ export default function styleConstructor(theme = {}) {
       marginBottom: 50,
       backgroundColor: appStyle.backgroundColor,
       position: 'absolute',
-      top: 0,
+      top: KNOB_HEIGHT,
       left: 0,
     },
     ...(theme[STYLESHEET_ID] || {})
