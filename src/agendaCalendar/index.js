@@ -71,8 +71,6 @@ export default class AgendaView extends Component {
     markedDates: PropTypes.object,
     /** Optional marking type if custom markedDates are provided */
     markingType: PropTypes.string,/*
-    /** Hide knob button. Default = false */
-    hideKnob: PropTypes.bool,
     /** Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting */
     monthFormat: PropTypes.string,
     /** A RefreshControl component, used to provide pull-to-refresh functionality for the ScrollView. */
@@ -339,19 +337,18 @@ export default class AgendaView extends Component {
 
   render() {
     const agendaHeight = Math.max(0, this.viewHeight - HEADER_HEIGHT);
-    const agendaHeight2 = Math.max(0, this.viewHeight / 2 - HEADER_HEIGHT);
     const weekDaysNames = dateutils.weekDayNames(this.props.firstDay);
 
     const weekdaysStyle = [this.styles.weekdays, {
       flexDirection: 'column',
       opacity: this.state.scrollY.interpolate({
-        inputRange: [0, agendaHeight - HEADER_HEIGHT],
+        inputRange: [agendaHeight - HEADER_HEIGHT, agendaHeight],
         outputRange: [0, 1],
         extrapolate: 'clamp'
       }),
       transform: [{
         translateY: this.state.scrollY.interpolate({
-          inputRange: [0, agendaHeight - HEADER_HEIGHT],
+          inputRange: [Math.max(0, agendaHeight - HEADER_HEIGHT), agendaHeight],
           outputRange: [-HEADER_HEIGHT, 0],
           extrapolate: 'clamp'
         })
@@ -392,8 +389,8 @@ export default class AgendaView extends Component {
     };
 
     const reservationsTranslate = this.state.scrollY.interpolate({
-      inputRange: [0, agendaHeight],
-      outputRange: [(agendaHeight - HEADER_HEIGHT) / 2, 0],
+      inputRange: [0, this.viewWidth],
+      outputRange: [this.viewWidth, HEADER_HEIGHT],
       extrapolate: 'clamp'
     });
 
@@ -409,34 +406,49 @@ export default class AgendaView extends Component {
       weekdaysStyle.push({ height: HEADER_HEIGHT });
     }
 
-    const shouldAllowDragging = !this.props.hideKnob;
-    const scrollPadPosition = (shouldAllowDragging ? HEADER_HEIGHT : 0) - KNOB_HEIGHT;
+    const scrollPadPosition = HEADER_HEIGHT - KNOB_HEIGHT;
 
     const scrollPadStyle = {
       position: 'absolute',
       width: this.viewWidth,
       height: KNOB_HEIGHT,
-      top: scrollPadPosition,
+      top: -KNOB_HEIGHT,
       transform: [{ translateY: reservationsTranslate }],
-      left: 0
+      left: 0,
     };
 
-    let knob = (<View style={this.styles.knobContainer} />);
+    const knobContainer = {
+      width: this.viewWidth,
+      height: KNOB_HEIGHT,
+      alignItems: 'center',
+    };
 
-    if (!this.props.hideKnob) {
-      const knobView = this.props.renderKnob ? this.props.renderKnob() : (<View style={this.styles.knob} />);
-      knob = (
-        <View style={this.styles.knobContainer}>
-          <View ref={(c) => this.knob = c}>{knobView}</View>
-        </View>
-      );
-    }
+    const knob = <View ref={(c) => this.knob = c}>{this.props.renderKnob()}</View>;
+    const scrollPad = (
+      <Animated.ScrollView
+        ref={c => this.scrollPad = c}
+        overScrollMode='never'
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        style={scrollPadStyle}
+        scrollEventThrottle={1}
+        scrollsToTop={false}
+        onTouchStart={this.onTouchStart}
+        onTouchEnd={this.onTouchEnd}
+        onScrollBeginDrag={this.onStartDrag}
+        onScrollEndDrag={this.onSnapAfterDrag}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }],
+          { useNativeDriver: true },
+        )}
+      >
+        <View style={{ height: this.viewHeight + KNOB_HEIGHT }} onLayout={this.onScrollPadLayout} />
+      </Animated.ScrollView>
+    )
 
     return (
       <View onLayout={this.onLayout} style={[this.props.style, { flex: 1, overflow: 'hidden' }]}>
-        <Animated.View style={[this.styles.reservations, { transform: [{ translateY: reservationsTranslate }] }]}>
-          {this.props.children || this.renderReservations()}
-        </Animated.View>
+        
         <Animated.View style={headerStyle} pointerEvents={'box-none'}>
           <Animated.View style={contentStyle} pointerEvents={'box-none'}>
             <CalendarList
@@ -469,9 +481,7 @@ export default class AgendaView extends Component {
             />
           </Animated.View>
 
-          <Animated.View style={{ transform: [{ translateY: knobTranslate }] }}>
-            {knob}
-          </Animated.View>
+          
         </Animated.View>
 
         <Animated.View style={weekdaysStyle}>
@@ -498,25 +508,13 @@ export default class AgendaView extends Component {
           />
         </Animated.View>
 
-        <Animated.ScrollView
-          ref={c => this.scrollPad = c}
-          overScrollMode='never'
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          style={scrollPadStyle}
-          scrollEventThrottle={1}
-          scrollsToTop={false}
-          onTouchStart={this.onTouchStart}
-          onTouchEnd={this.onTouchEnd}
-          onScrollBeginDrag={this.onStartDrag}
-          onScrollEndDrag={this.onSnapAfterDrag}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }],
-            { useNativeDriver: true },
-          )}
-        >
-          <View style={{ height: agendaHeight + KNOB_HEIGHT }} onLayout={this.onScrollPadLayout} />
-        </Animated.ScrollView>
+        <Animated.View style={[this.styles.reservations, { height: this.viewHeight - (this.state.scrollPadY === agendaHeight ? (HEADER_HEIGHT + KNOB_HEIGHT) : this.viewWidth), width: this.viewWidth , transform: [{ translateY: reservationsTranslate }] }]}>
+            <View style={[knobContainer, { position: 'absolute', top: -KNOB_HEIGHT, left: 0 }]}>
+              {knob}
+            </View>
+            {this.props.children || this.renderReservations()}
+        </Animated.View>
+        {scrollPad}
       </View>
     );
   }
