@@ -127,7 +127,7 @@ export default class AgendaView extends Component {
 
   setScrollPadPosition(y, animated) {
     this.setState({ scrollPadY: y });
-    this.scrollPad._component.scrollTo({ x: 0, y, animated });
+    this.scrollPad.scrollTo({ x: 0, y, animated });
   }
 
   onScrollPadLayout() {
