@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Dimensions, Animated, ViewPropTypes} from 'react-native';
+import {Text, View, Dimensions, Animated} from 'react-native';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
 
@@ -13,8 +13,6 @@ import {VelocityTracker} from '../input';
 
 const HEADER_HEIGHT = 108;
 const KNOB_HEIGHT = 24;
-//Fallback when RN version is < 0.44
-const viewPropTypes = ViewPropTypes || View.propTypes;
 
 /**
  * @description: Agenda component
@@ -30,7 +28,7 @@ export default class AgendaView extends Component {
     /** Specify theme properties to override specific styles for calendar parts. Default = {} */
     theme: PropTypes.object,
     /** agenda container style */
-    style: viewPropTypes.style,
+    style: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.number]),
     /** the list of items that have to be displayed in agenda. If you want to render item as empty date
     the value of date key has to be an empty array []. If there exists no value for date key it is
     considered that the date in question is not yet loaded */

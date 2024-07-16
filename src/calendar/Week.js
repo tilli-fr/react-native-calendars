@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, ViewPropTypes} from 'react-native';
+import {View} from 'react-native';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
 
@@ -14,9 +14,6 @@ import SingleDay from './day/custom';
 import shouldComponentUpdate from './updater';
 import {SELECT_DATE_SLOT} from '../testIDs';
 
-
-//Fallback when RN version is < 0.44
-const viewPropTypes = ViewPropTypes || View.propTypes;
 const EmptyArray = [];
 
 /**
@@ -33,7 +30,7 @@ class Week extends Component {
     /** Collection of dates that have to be marked. Default = {} */
     markedDates: PropTypes.object,
     /** Specify style for calendar container element. Default = {} */
-    style: viewPropTypes.style,
+    style: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.number]),
     /** Initially visible month. Default = Date() */
     current: PropTypes.any,
     /** Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined */

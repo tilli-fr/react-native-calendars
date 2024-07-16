@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Dimensions, Animated, ViewPropTypes } from 'react-native';
+import { Text, View, Dimensions, Animated } from 'react-native';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
 
@@ -10,9 +10,6 @@ import Week from '../calendar/Week';
 import ReservationsList from './reservation-list';
 import styleConstructor, { HEADER_HEIGHT, KNOB_HEIGHT } from './style';
 import { VelocityTracker } from '../input';
-
-//Fallback when RN version is < 0.44
-const viewPropTypes = ViewPropTypes || View.propTypes;
 
 /**
  * @description: Agenda component
@@ -28,7 +25,7 @@ export default class AgendaView extends Component {
     /** Specify theme properties to override specific styles for calendar parts. Default = {} */
     theme: PropTypes.object,
     /** agenda container style */
-    style: viewPropTypes.style,
+    style: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.number]),
     /** Display the calendar in horizontal. Default = false */
     horizontal: PropTypes.bool,
     /** the list of items that have to be displayed in agenda. If you want to render item as empty date
@@ -450,7 +447,7 @@ export default class AgendaView extends Component {
       >
         <View style={{ height: this.viewHeight + KNOB_HEIGHT }} onLayout={this.onScrollPadLayout} />
       </Animated.ScrollView>
-    )
+    );
 
     return (
       <View onLayout={this.onLayout} style={[this.props.style, { flex: 1, overflow: 'hidden' }]}>
@@ -516,10 +513,10 @@ export default class AgendaView extends Component {
         </Animated.View>
 
         <Animated.View style={[this.styles.reservations, { height: this.viewHeight - (this.state.scrollPadY === agendaHeight ? (HEADER_HEIGHT + KNOB_HEIGHT) : (this.state.calendarHeight + KNOB_HEIGHT || 0)), width: this.viewWidth , transform: [{ translateY: reservationsTranslate }] }]}>
-            <View style={[knobContainer, { position: 'absolute', top: -KNOB_HEIGHT, left: 0 }]}>
-              {knob}
-            </View>
-            {this.props.children || this.renderReservations()}
+          <View style={[knobContainer, { position: 'absolute', top: -KNOB_HEIGHT, left: 0 }]}>
+            {knob}
+          </View>
+          {this.props.children || this.renderReservations()}
         </Animated.View>
         {scrollPad}
       </View>
